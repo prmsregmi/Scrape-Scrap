@@ -1,0 +1,1 @@
+This python script scrapes medicines with all the required fields including Manufacturer Name, Generic Names, Brand Name, Dosage, Price, Unit Price and Type of Medicine. The medicines are scraped from http://www.medguideindia.com/. The extracted medicine is exported as csv.
