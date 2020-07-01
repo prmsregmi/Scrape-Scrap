@@ -3,6 +3,7 @@ from urllib.request import urlopen, Request
 from bs4 import BeautifulSoup
 import pandas as pd
 import numpy as np
+import csv
 header= {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) ' 
                         'AppleWebKit/537.11 (KHTML, like Gecko) '
                         'Chrome/23.0.1271.64 Safari/537.11',
@@ -12,8 +13,9 @@ header= {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
             'Accept-Language': 'en-US,en;q=0.8',
             'Connection': 'keep-alive'}
 
+#save links
 list_link=[]
-for a in range(47):
+for a in range(3):
     url="http://www.medguideindia.com/show_generics.php?nav_link=&pageNum_rr="+str(a)+"&nav_link=&selectme="+str(a)
     req=Request(url=url, headers=header)
     page_html=urlopen(req).read()
@@ -34,13 +36,18 @@ for a in range(47):
 df = pd.DataFrame(list_link)
 df.to_csv('links.csv', index=False)
 print("")
+
+#save data of medicine
 my_list=[]
 c=0
 for url in list_link:
     c=c+1
-    req=Request(url=url, headers=header)
-    page_html=urlopen(req).read()
-    soup=BeautifulSoup(page_html, 'html.parser')
+    try:
+        req=Request(url=url, headers=header)
+        page_html=urlopen(req).read()
+        soup=BeautifulSoup(page_html, 'html.parser')
+    except:
+        print("Error in getting response from website!")
 
     h=soup.find("td", {"class": "rd-txt"}).text.strip().replace("Matched Brand/Brands of , ","")
     ok=h.replace("Matched Brand/Brands of","")
@@ -52,8 +59,7 @@ for url in list_link:
                 if(len(row)==1):
                     temp=row
                 else:
-                    my_list.append([ok]+temp+row)
+                    with open('pharma drugs.csv','a') as f:
+                        writer = csv.writer(f)
+                        writer.writerow([ok]+temp+row)
     print(str(c)+" Pages Scraped")
-
-df = pd.DataFrame(my_list)
-df.to_csv('pharma_drugs.csv', index=False)
