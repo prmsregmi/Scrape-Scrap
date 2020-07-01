@@ -15,7 +15,7 @@ header= {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
 
 #save links
 list_link=[]
-for a in range(3):
+for a in range(47):
     url="http://www.medguideindia.com/show_generics.php?nav_link=&pageNum_rr="+str(a)+"&nav_link=&selectme="+str(a)
     req=Request(url=url, headers=header)
     page_html=urlopen(req).read()
